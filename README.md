@@ -27,3 +27,12 @@ Age | Sample line    | Date     | Tech  | Index           | df name  |space|
 9w  |g10             |10/8/2020 | indrop| 19 - AGTAAAGG   |w9_g10    |whole|
 9w  |wt              |10/8/2020 | indrop| 21 - TCCGTCTC   |w9_wt     |whole|
 
+
+Invalid data files: w6_45f.01 and w6_47f.01
+Samples included in the downstream analysis: 18 samples 
+* 3w 4 samples
+* 3w 2 nuc seqs (45f & 47f)
+* 6w 4 samples
+* 9w 4 samples
+* 12w 4 samples
+
