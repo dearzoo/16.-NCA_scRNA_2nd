@@ -9,29 +9,28 @@
 
 
 
-
-|Age | Sample line    | Date     | Tech  | Index           | df name  |Space|Remarks
-|---:|:--------------:|:--------:|:-----:|:---------------:|:--------:|:---:|:-----:|
-|6W  |45F_01          |8/4/2020  | indrop| 1 - CTCTCTAT    |w6_45f.01 |whole|invalid|
-|6W  |47F_01          |8/4/2020  | indrop| 2 - TATCCTCT    |w6_47f.01 |whole|invalid|
-|6W  |G10             |8/4/2020  | indrop| 3 - GTAAGGAG    |w6_g10    |whole|       |
-|6W  |WT              |8/4/2020  | indrop| 4 - ACTGCATA    |w6_wt     |whole|       |
-|6W  |45F_02          |8/4/2020  | indrop| 5 - AAGGAGTA    |w6_45f.02 |whole|       |
-|6W  |47F_02          |8/4/2020  | indrop| 6 - CTAAGCCT    |w6_47f.02 |whole|       |
-|3W  |45F             |8/21/2020 | indrop| 7 - CGTCTAAT    |w3_45f    |whole|       |
-|3W  |47F             |8/21/2020 | indrop| 8 - TCTCTCCG    |w3_47f    |whole|       |
-|3W  |G10             |8/21/2020 | indrop| 9 - TCGACTAG    |w3_g10    |whole|       |
-|3W  |WT              |8/21/2020 | indrop| 10 - TTCTAGCT   |w3_wt     |whole|       |
-|3W  |45F nuc         |8/21/2020 | indrop| 11 - CCTAGAGT   |w3_45f_nuc|nuc  |       |
-|3W  |47F nuc         |8/21/2020 | indrop| 12 - GCGTAAGA   |w3_47f_nuc|nuc  |       |
-|12w |45f             |10/2/2020 | indrop| 13 - CTTAATAG   |w12_45f   |whole|       |
-|12w |47f             |10/2/2020 | indrop| 14 - ATAGCCTT   |w12_47f   |whole|       |
-|12w |g10             |10/2/2020 | indrop| 15 - TAAGGCTC   |w12_g10   |whole|       |
-|12w |wt              |10/2/2020 | indrop| 16 - TCGCATAA   |w12_wt    |whole|       |
-|9w  |45f             |10/8/2020 | indrop| 17 - TTACCTCC   |w9_45f    |whole|gene counts too low|
-|9w  |47f             |10/8/2020 | indrop| 18 - CAGTTATG   |w9_47f    |whole|       |
-|9w  |g10             |10/8/2020 | indrop| 19 - CCTTTACT   |w9_g10    |whole|       |
-|9w  |wt              |10/8/2020 | indrop| 21 - GAGACGGA   |w9_wt     |whole|       |
+| No. | Age | Sample line |    Date   |  Tech  |     Index     |   df name  | Space |       Remarks       |
+|:---:|:---:|:-----------:|:---------:|:------:|:-------------:|:----------:|:-----:|:-------------------:|
+|  1  |  6W |    45F_01   |  8/4/2020 | indrop |  1 - CTCTCTAT |  w6_45f.01 | whole |     **invalid**     |
+|  2  |  6W |    47F_01   |  8/4/2020 | indrop |  2 - TATCCTCT |  w6_47f.01 | whole |     **invalid**     |
+|  3  |  6W |     G10     |  8/4/2020 | indrop |  3 - GTAAGGAG |   w6_g10   | whole |                     |
+|  4  |  6W |      WT     |  8/4/2020 | indrop |  4 - ACTGCATA |    w6_wt   | whole |                     |
+|  5  |  6W |    45F_02   |  8/4/2020 | indrop |  5 - AAGGAGTA |  w6_45f.02 | whole |                     |
+|  6  |  6W |    47F_02   |  8/4/2020 | indrop |  6 - CTAAGCCT |  w6_47f.02 | whole |                     |
+|  7  |  3W |     45F     | 8/21/2020 | indrop |  7 - CGTCTAAT |   w3_45f   | whole |                     |
+|  8  |  3W |     47F     | 8/21/2020 | indrop |  8 - TCTCTCCG |   w3_47f   | whole |                     |
+|  9  |  3W |     G10     | 8/21/2020 | indrop |  9 - TCGACTAG |   w3_g10   | whole |                     |
+|  10 |  3W |      WT     | 8/21/2020 | indrop | 10 - TTCTAGCT |    w3_wt   | whole |                     |
+|  11 |  3W |   45F nuc   | 8/21/2020 | indrop | 11 - CCTAGAGT | w3_45f_nuc |  nuc  |                     |
+|  12 |  3W |   47F nuc   | 8/21/2020 | indrop | 12 - GCGTAAGA | w3_47f_nuc |  nuc  |                     |
+|  13 | 12w |     45f     | 10/2/2020 | indrop | 13 - CTTAATAG |   w12_45f  | whole |                     |
+|  14 | 12w |     47f     | 10/2/2020 | indrop | 14 - ATAGCCTT |   w12_47f  | whole |                     |
+|  15 | 12w |     g10     | 10/2/2020 | indrop | 15 - TAAGGCTC |   w12_g10  | whole |                     |
+|  16 | 12w |      wt     | 10/2/2020 | indrop | 16 - TCGCATAA |   w12_wt   | whole |                     |
+|  17 |  9w |     45f     | 10/8/2020 | indrop | 17 - TTACCTCC |   w9_45f   | whole | **gene counts too low** |
+|  18 |  9w |     47f     | 10/8/2020 | indrop | 18 - CAGTTATG |   w9_47f   | whole |                     |
+|  19 |  9w |     g10     | 10/8/2020 | indrop | 19 - CCTTTACT |   w9_g10   | whole |                     |
+|  20 |  9w |      wt     | 10/8/2020 | indrop | 21 - GAGACGGA |    w9_wt   | whole |                     |
 
 
 Invalid data files: w6_45f.01 and w6_47f.01
@@ -97,3 +96,19 @@ Samples included in the downstream analysis: 18 samples
 
 - The 12-week g10 sample shows very low complexity when compared with other samples. 
 <img src="figures/QC/QC metrics/complexity.jpeg" width = "800">
+
+
+## Violin plots by sample
+
+- The 3rd columns are mitrochondrial content %. (sample names were added only for the convenience purpose)
+- [Violin Plots](https://github.com/dearzoo/16.-NCA_scRNA_2nd/blob/main/figures/violin/qc_violin_with_names.pdf) for the violin plots
+
+
+
+#### Sample-level filtration
+**12-week 45 sample** looks low quality --> will be additionally ***excluded*** from downstream analysis
+
+
+
+
+
