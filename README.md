@@ -53,11 +53,6 @@
 <img src="figures/QC/QC metrics/unique_genes_box_log.jpeg" width = "1000">
 
 
-**Conclusion**
- - better to exclude w12_g10
-
- 
-
 
 - **Median value of unique gene counts by sample**
 
@@ -94,12 +89,11 @@
 - The 12-week g10 sample shows very low complexity when compared with other samples. 
 <img src="figures/QC/QC metrics/complexity.jpeg" width = "800">
 
-
+ 
 ## Violin plots by sample
 
 - The 3rd columns are mitrochondrial content %. (sample names were added only for the convenience purpose)
 - [Violin Plots](https://github.com/dearzoo/16.-NCA_scRNA_2nd/blob/main/figures/violin/qc_violin_with_names.pdf) for the violin plots
-
 
 
 #### Sample-level filtration
