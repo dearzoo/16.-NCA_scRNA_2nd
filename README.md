@@ -57,6 +57,8 @@ Samples included in the downstream analysis: 18 samples
 **3. Detected unique genes per cell**
 <img src="figures/QC/QC metrics/unique_genes_box.jpeg" width = "1000">
 
+<img src="figures/QC/QC metrics/unique_genes_box_log.jpeg" width = "1000">
+
 **4. UMI-Unique genes-Mitochondrial content**
 <img src="figures/QC/QC metrics/umi_genes_mt.jpeg" width = "1200">
 
