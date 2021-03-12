@@ -55,12 +55,45 @@ Samples included in the downstream analysis: 18 samples
 <img src="figures/QC/QC metrics/umi_counts.jpeg" width="800">
 
 **3. Detected unique genes per cell**
+
+- The 12-week g10 sample shows a way lower gene counts than other samples
+
 <img src="figures/QC/QC metrics/unique_genes_box.jpeg" width = "1000">
 
 <img src="figures/QC/QC metrics/unique_genes_box_log.jpeg" width = "1000">
 
+
+- **Median value of unique gene counts by sample**
+
+|   Sample   | Median_unique gene counts |
+|:----------:|:-------------------------:|
+|   w6_g10   |           326.0           |
+|    w6_wt   |           301.0           |
+|  w6_45f.02 |           402.0           |
+|  w6_47f.02 |           388.0           |
+|   w3_45f   |           258.0           |
+|   w3_47f   |           337.0           |
+|   w3_g10   |           275.0           |
+|    w3_wt   |           313.0           |
+| w3_45f_nuc |           238.0           |
+| w3_47f_nuc |           235.0           |
+|   w12_45f  |           264.5           |
+|   w12_47f  |           244.5           |
+|   w12_g10  |            11.5           |
+|   w12_wt   |           223.0           |
+|   w9_45f   |            0.0            |
+|   w9_47f   |           128.0           |
+|   w9_g10   |           219.0           |
+|    w9_wt   |           242.5           |
+
 **4. UMI-Unique genes-Mitochondrial content**
+
+- The 12-week g10 sample shows low quality characteristics. 
+- Positioned under the set intercepts.
+
 <img src="figures/QC/QC metrics/umi_genes_mt.jpeg" width = "1200">
 
 **5. Complexity**
+
+- The 12-week g10 sample shows very low complexity when compared with other samples. 
 <img src="figures/QC/QC metrics/complexity.jpeg" width = "800">
