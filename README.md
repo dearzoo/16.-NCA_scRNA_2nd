@@ -1,10 +1,10 @@
 # NCA_2nd Round
 
 ## Data by age
-0. Total number of samples: 20 samples --> 2 invalid --> 18 valid samples
+0. Total number of samples: 20 samples --> 3 invalid --> **17 valid samples**
 1. 3 weeks: 6 samples
 2. 6 weeks: 6 samples --> 2 of them are invalid --> 4 valid samples
-3. 9 weeks: 4 samples
+3. 9 weeks: 4 samples --> 1 of them is invalid --> 3 valid samples
 4. 12 weeks: 4 samples
 
 
@@ -28,7 +28,7 @@
 |12w |47f             |10/2/2020 | indrop| 14 - ATAGCCTT   |w12_47f   |whole|        |
 |12w |g10             |10/2/2020 | indrop| 15 - TAAGGCTC   |w12_g10   |whole|        |
 |12w |wt              |10/2/2020 | indrop| 16 - TCGCATAA   |w12_wt    |whole|        |
-|9w  |45f             |10/8/2020 | indrop| 17 - TTACCTCC   |w9_45f    |whole|        |
+|9w  |45f             |10/8/2020 | indrop| 17 - TTACCTCC   |w9_45f    |whole|invalide|
 |9w  |47f             |10/8/2020 | indrop| 18 - CAGTTATG   |w9_47f    |whole|        |
 |9w  |g10             |10/8/2020 | indrop| 19 - CCTTTACT   |w9_g10    |whole|        |
 |9w  |wt              |10/8/2020 | indrop| 21 - GAGACGGA   |w9_wt     |whole|        |
@@ -43,3 +43,22 @@ Samples included in the downstream analysis: 18 samples
 * 9w 4 samples
 * 12w 4 samples
 
+
+## Quality metrics
+
+**1. Cell counts by sample**
+
+<img src="figures/QC/QC metrics/ncells.jpeg" width="800">
+ 
+**2. Number of UMIs/transcripts per cell**
+
+<img src="figures/QC/QC metrics/umi_counts.jpeg" width="800">
+
+**3. Detected unique genes per cell**
+<img src="figures/QC/QC metrics/unique_genes_box.jpeg" width = "1000">
+
+**4.UMI-Unique genes-Mitochondrial content **
+<img src="figures/QC/QC metrics/umi_genes_mt.jpeg" width = "1200">
+
+**5. Complexity**
+<img src="figures/QC/QC metrics/complexity.jpeg" width = "800">
