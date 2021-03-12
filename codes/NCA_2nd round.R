@@ -1,4 +1,4 @@
-# Set up ----
+# 1. Set up ----
 library(Seurat)
 library(cowplot)
 library(umap)
@@ -14,11 +14,11 @@ library(stringr)
 library(Matrix.utils)
 
 
-# Data overview ----
+# 2. Data overview ----
 # https://github.com/dearzoo/16.-NCA_scRNA_2nd
 
 
-# Data read-in ----
+# 2.1. Data read-in ----
 read.in <- function(x){read.table(x, as.is = T, header = F)[, 1]}
 
 # sample 01: data file invalid
@@ -108,7 +108,7 @@ unlist(barcodes)
 unlist(barcodes_rv)
 
 
-# converting function
+# converting function (complementary)
 convert <- function(x){
   chartr("ATGC","TACG",x)
 }
@@ -208,15 +208,15 @@ names(data.list) <- c("w6_g10",
                       "w9_45f",                  # sample 17
                       "w9_47f",                  # sample 18
                       "w9_g10",                  # sample 19
-                      "w9_wt")              
+                      "w9_wt")                   # sample 21
 
 # check dimension
 unlist(lapply(data.list, nrow))
-unlist(lapply(data.list, ncol))
+View(unlist(lapply(data.list, ncol)))
 # >>>>> Data All Read-in ====
 
 # . ----
-# Gene annotation (BioMart) ----
+# 2.2. Gene annotation (BioMart) ----
 # before doing BioMart, check all rownames to see they are all identical
 
 # check if all rn vectors are identical
@@ -338,6 +338,405 @@ seurat.obj <- function(x, n){CreateSeuratObject(counts = x,
 # make Seurat objects
 library(Seurat)
 seurat.list <- list()
-seurat.list <- lapply(good.data.list, seurat.obj, n=200)    
-seurat.list <- lapply(good.data.list, seurat.obj, n=100)    
+seurat.list <- lapply(good.data.list, seurat.obj, n=200) # selected for downstream
+seurat.list <- lapply(good.data.list, seurat.obj, n=100) 
+seurat.list <- lapply(good.data.list, seurat.obj, n=50)  
 View(seurat.list)
+
+
+# cell counts 
+unlist(lapply(seurat.list, ncol))
+View(unlist(lapply(seurat.list, ncol)))
+
+# working with min.features = 100
+# add metadata (to be edited)
+for(i in 1:length(seurat.list)){
+  seurat.list[[i]]$sample <- names(seurat.list[i])
+  seurat.list[[i]]$age <- "6w"
+  seurat.list[[i]]$line <- "g10"
+  seurat.list[[i]]$date <- "8/4/2020"
+  seurat.list[[i]]$space <- "whole"
+  seurat.list[[i]]$tech <- "inDrop"
+}
+
+# edit age
+for(i in 5:10){
+  seurat.list[[i]]$age <- "3w"
+}
+
+for(i in 11:14){
+  seurat.list[[i]]$age <- "12w"
+}
+
+for(i in 15:18){
+  seurat.list[[i]]$age <- "9w"
+}
+
+
+# edit line
+for(i in c(2, 8, 14, 18)){
+  seurat.list[[i]]$line <- "wt"
+}
+
+
+for(i in c(3, 5, 9, 11, 15)){
+  seurat.list[[i]]$line <- "45f"
+}
+
+for(i in c(4, 6, 10, 12, 16)){
+  seurat.list[[i]]$line <- "47f"
+}
+
+
+# edit date
+for(i in 5:10){
+  seurat.list[[i]]$date <- "8/21/2020"
+}
+
+for(i in 11:14){
+  seurat.list[[i]]$date <- "10/02/2020"
+}
+
+for(i in 15:18){
+  seurat.list[[i]]$date <- "10/08/2020"
+}
+
+
+# edit space
+for (i in 9:10){
+  seurat.list[[i]]$space <- "nuc-seq"
+}
+
+
+# Add content to metadata
+for(i in 1:length(seurat.list)){
+  seurat.list[[i]]$percent.mt <- PercentageFeatureSet(seurat.list[[i]], pattern = "^MT-")
+}
+
+# check if the metadata is correct
+View(seurat.list)
+
+for (i in 1:length(seurat.list)){
+  print(table(seurat.list[[i]]@meta.data$age))
+}
+
+for (i in 1:length(seurat.list)){
+  print(table(seurat.list[[i]]@meta.data$space))
+}
+
+for (i in 1:length(seurat.list)){
+  print(table(seurat.list[[i]]@meta.data$date))
+}
+
+for (i in 1:length(seurat.list)){
+  print(table(seurat.list[[i]]@meta.data$line))
+}
+
+# Re-order the seurat.list
+View(names(seurat.list))
+seurat.list_ordered <- seurat.list[c(8, 7, 6, 5, 10, 9,            # 3 weeks
+                                     2, 1, 4, 3,                   # 6 weeks
+                                     18, 17, 16, 15,               # 9 weeks
+                                     14, 13, 12, 11)]              # 12 weeks
+
+View(seurat.list_ordered)
+
+# check
+all(names(seurat.list) %in% names(seurat.list_ordered))
+all(unlist(lapply(seurat.list, nrow)) %in% unlist(lapply(seurat.list_ordered, nrow)))
+all(unlist(lapply(seurat.list, ncol)) %in% unlist(lapply(seurat.list_ordered, ncol)))
+
+
+# all_set. replace
+seurat.list <- seurat.list_ordered
+rm(seurat.list_ordered)
+
+# VlnPlot Function setting
+violin <- function(seurat){
+  VlnPlot(seurat,
+          features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), 
+          ncol = 3, 
+          pt.size = 0)
+}
+
+
+pdf(file = "figures/violin/qc_violin.pdf")
+for(i in c(1:13, 15:length(seurat.list))){
+  print(violin(seurat.list[[i]]))
+}
+dev.off()
+
+pdf(file = "figures/violin/qc_violin_with_names.pdf")
+for(i in c(1:13, 15:length(seurat.list))){
+  print(violin(seurat.list[[i]])+ggtitle(names(seurat.list[i])))
+}
+dev.off()
+
+
+# . ----
+# 4. QC ----
+# Merge (w9_45 will be excluded because its seurat object dimension is 0*3)
+View(names(seurat.list))                                        
+merged_seurat <- merge(x = seurat.list[[1]],
+                       y = list(seurat.list[[2]],
+                                seurat.list[[3]],
+                                seurat.list[[4]],
+                                seurat.list[[5]],
+                                seurat.list[[6]],
+                                seurat.list[[7]],
+                                seurat.list[[8]],
+                                seurat.list[[9]],
+                                seurat.list[[10]],
+                                seurat.list[[11]],
+                                seurat.list[[12]],
+                                seurat.list[[13]],
+                                # seurat.list[[14]],    # w9_45F
+                                seurat.list[[15]],
+                                seurat.list[[16]],     # w12_g10
+                                seurat.list[[17]],
+                                seurat.list[[18]]),
+                       add.cell.id = c(names(seurat.list[1]), names(seurat.list[c(2:13, 15:18)])))
+
+
+
+
+
+# save merged seurat
+saveRDS(object = merged_seurat, file = "objects/merged_seurat.rds")
+# merged_seurat <- readRDS(file = "objects/merged_seurat.rds")             
+  
+
+# check
+head(merged_seurat@meta.data)
+tail(merged_seurat@meta.data)
+
+length(unique(merged_seurat$sample))
+table(merged_seurat$sample)
+
+# sample re-leveling
+class(merged_seurat$sample)      # character
+
+merged_seurat$sample <- factor(merged_seurat$sample,
+                               levels = c("w3_wt", "w3_g10", "w3_47f", "w3_45f", "w3_47f_nuc", "w3_45f_nuc",
+                                          "w6_wt", "w6_g10", "w6_47f.02", "w6_45f.02",
+                                          "w9_wt", "w9_g10", "w9_47f",
+                                          "w12_wt", "w12_g10", "w12_47f", "w12_45f"))
+
+table(merged_seurat$sample)
+length(unique(merged_seurat$sample))
+
+# _ QC metrics set up ----
+# Add number of genes per UMI
+merged_seurat$log10GenesPerUMI <- log10(merged_seurat$nFeature_RNA) / log10(merged_seurat$nCount_RNA)
+
+
+# if I want to add more factors for QC metrics and work on a separate metadata,
+metadata <- merged_seurat@meta.data
+
+# add new columns to the metadata
+# Add cell IDs to metadata
+metadata$cells <- rownames(metadata)
+head(metadata)
+
+
+# _ QC visualization ----
+
+# Cell Counts by Sample
+library(ggplot2)
+library(tibble)
+
+
+jpeg(filename = "figures/QC/QC metrics/ncells.jpeg", 
+     width = 800, height = 600,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>% 
+  ggplot(aes(x=sample, fill=sample)) + 
+  geom_bar() +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5)) +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  ggtitle("NCells")
+dev.off()
+
+# Number of UMIs/transcripts per cell
+jpeg(filename = "figures/QC/QC metrics/umi_counts.jpeg", 
+     width = 800, height = 600,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+
+metadata %>% 
+  ggplot(aes(color=sample, x=nCount_RNA, fill= sample)) + 
+  geom_density(alpha = 0.2) + 
+  scale_x_log10() + 
+  theme_classic() +
+  ylab("Cell density") +
+  geom_vline(xintercept = 300)
+dev.off()
+
+# Detected genes per cell: distribution
+jpeg(filename = "figures/QC/QC metrics/unique_genes_density.jpeg", 
+     width = 800, height = 600,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>% 
+  ggplot(aes(color=sample, x=nFeature_RNA, fill= sample)) + 
+  geom_density(alpha = 0.2) + 
+  theme_classic() +
+  scale_x_log10() + 
+  geom_vline(xintercept = c(30, 50, 100)) +
+  ggtitle("Unique Genes per Cell") +
+  theme(plot.title = element_text(hjust=0.5, face="bold"))
+dev.off()
+
+# Detected genes per cell: distribution via boxplot
+## linear
+jpeg(filename = "figures/QC/QC metrics/unique_genes_box.jpeg", 
+     width = 1000, height = 700,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>% 
+  ggplot(aes(x=sample, y=nFeature_RNA, fill=sample)) + 
+  geom_boxplot() + 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 0, vjust = 1, hjust=1)) +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  ggtitle("nFeature_RNAs per Cell") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+dev.off()
+
+## log
+jpeg(filename = "figures/QC/QC metrics/unique_genes_box_log.jpeg", 
+     width = 1000, height = 700,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>% 
+  ggplot(aes(x=sample, y=log10(nFeature_RNA), fill=sample)) + 
+  geom_boxplot() + 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 0, vjust = 1, hjust=1)) +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  ggtitle("nFeature_RNAs per Cell_Log Scaled") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+dev.off()
+
+
+# Number of genes per UMI
+# Visualize the correlation between genes detected and number of UMIs and determine whether strong presence of cells with low numbers of genes/UMIs
+jpeg(filename = "figures/QC/QC metrics/umi_genes_mt.jpeg", 
+     width = 1200, height = 1000,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>% 
+  ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.mt)) + 
+  geom_point() + 
+  scale_colour_gradient(low = "gray90", high = "black") +
+  stat_smooth(method=lm) +
+  scale_x_log10() + 
+  scale_y_log10() + 
+  theme_classic() +
+  geom_vline(xintercept = 300) +
+  geom_hline(yintercept = 200) +
+  facet_wrap(~sample)
+dev.off()
+
+# Complexity of the gene expression: Detected genes per UMI
+jpeg(filename = "figures/QC/QC metrics/complexity.jpeg", 
+     width = 800, height = 600,
+     quality = 100,
+     pointsize = 12,
+     res = 100)
+metadata %>%
+  ggplot(aes(x=log10GenesPerUMI, color = sample, fill= sample)) +
+  geom_density(alpha = 0.2) +
+  theme_classic() +
+  geom_vline(xintercept = 0.8) +
+  ggtitle("Complexity") +
+  theme(plot.title = element_text(hjust=0.5, face="bold"))
+dev.off()
+
+
+# unique gene number (summary statistics)
+summary.stat <- list()
+for(i in 1:length(seurat.list)){
+  summary.stat[[i]] <- summary(seurat.list[[i]]@meta.data$nFeature_RNA)
+}
+
+names(summary.stat) <- names(seurat.list)
+lapply(summary.stat, print)
+
+med_gene_count <- list()
+for(i in 1:length(seurat.list)){
+  med_gene_count[[i]] <- median(seurat.list[[i]]@meta.data$nFeature_RNA)
+}
+
+
+# comeback here ====
+# order of the table is weird
+names(med_gene_count) <- names(seurat.list)
+class(unlist(med_gene_count))
+med.gene.count_table <- data.frame("median_gene_counts" = unlist(med_gene_count))
+
+View(med.gene.count_table)
+
+median_gene_count <- data.frame("sample" = names(seurat.list), "med_unique_gene" = unlist(med_gene_count))
+View(median_gene_count)
+
+
+
+# comeback ====
+
+# :: Cell level filtration ----
+
+# 1. Sample exclusion: w12_g10 to be excluded
+length(table(merged_seurat$sample))
+unlist(lapply(seurat.list, ncol))
+
+# 2. Filter out low quality reads using selected thresholds - these will change with experiment
+filtered_seurat <- subset(x = merged_seurat,
+                            subset= (nFeature_RNA >= 200) &
+                              (nFeature_RNA <= 4000) &
+                              (percent.mt <= 40))
+
+
+saveRDS(filtered_seurat, file = "objects/Joseph/filtered_seurat.rds")
+filtered_seurat <- readRDS(file = "objects/Joseph/filtered_seurat.rds")
+
+
+# 3. QC 2nd phase ----
+# _ Crude process for unwanted variations ----
+## simple linear regression against a cell cycle score
+# Rough normalization of the counts because raw counts are not comparable
+seurat_phase <- NormalizeData(filtered_seurat)
+
+
+# # Cell cycle effect
+# # Load cell cycle markers (Gained at Harvard Core Training)
+# load("../99. Materials/Training/Harvard scRNA-seq Analysis/single_cell_rnaseq/data/cycle.rda")
+
+# Score cells for cell cycle (rename it because it's only to evaluate cell cycle effects)
+seurat_phase <- CellCycleScoring(seurat_phase, 
+                                   g2m.features = g2m_genes, 
+                                   s.features = s_genes)
+
+# View cell cycle scores and phases assigned to cells                             
+View(seurat_phase@meta.data)  
+dim(seurat_phase@meta.data)  # [1] 2377   12
+
+# After scoring the cells for cell cycle, we would like to determine whether cell cycle is a major source of variation in our dataset using PCA. 
+# 1. choose the most variable features
+# 2. scale the data
+
+# Identify the most variable genes
+seurat_phase <- FindVariableFeatures(seurat_phase, 
+                                       selection.method = "vst",
+                                       nfeatures = 2000, 
+                                       verbose = FALSE)
+
+
