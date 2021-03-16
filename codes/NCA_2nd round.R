@@ -492,7 +492,7 @@ merged_seurat <- merge(x = seurat.list[[1]],
                                 seurat.list[[13]],
                                 # seurat.list[[14]],    # w9_45F
                                 seurat.list[[15]],
-                                seurat.list[[16]],     # w12_g10
+                                seurat.list[[16]],      # w12_g10
                                 seurat.list[[17]],
                                 seurat.list[[18]]),
                        add.cell.id = c(names(seurat.list[1]), names(seurat.list[c(2:13, 15:18)])))
@@ -677,26 +677,23 @@ for(i in 1:length(seurat.list)){
 }
 
 
-# comeback here ====
-# order of the table is weird
 names(med_gene_count) <- names(seurat.list)
 class(unlist(med_gene_count))
 med.gene.count_table <- data.frame("median_gene_counts" = unlist(med_gene_count))
 
 View(med.gene.count_table)
 
-median_gene_count <- data.frame("sample" = names(seurat.list), "med_unique_gene" = unlist(med_gene_count))
-View(median_gene_count)
-
-
-
-# comeback ====
 
 # :: Cell level filtration ----
 
-# 1. Sample exclusion: w12_g10 to be excluded
-length(table(merged_seurat$sample))
+# 1. Sample exclusion: w12_g10 to be additionally excluded when integrating objects
+# This will be done in integration because it's cumbersome to do it here. The merged seurat needs to be created again.
 unlist(lapply(seurat.list, ncol))
+
+length(table(merged_seurat$sample))     # 17 (will be 16 samples in integration)
+table(merged_seurat$sample)
+
+
 
 # 2. Filter out low quality reads using selected thresholds - these will change with experiment
 filtered_seurat <- subset(x = merged_seurat,
@@ -705,8 +702,8 @@ filtered_seurat <- subset(x = merged_seurat,
                               (percent.mt <= 40))
 
 
-saveRDS(filtered_seurat, file = "objects/Joseph/filtered_seurat.rds")
-filtered_seurat <- readRDS(file = "objects/Joseph/filtered_seurat.rds")
+saveRDS(filtered_seurat, file = "objects/filtered_seurat.rds")
+filtered_seurat <- readRDS(file = "objects/filtered_seurat.rds")
 
 
 # 3. QC 2nd phase ----
@@ -727,7 +724,8 @@ seurat_phase <- CellCycleScoring(seurat_phase,
 
 # View cell cycle scores and phases assigned to cells                             
 View(seurat_phase@meta.data)  
-dim(seurat_phase@meta.data)  # [1] 2377   12
+names(seurat_phase@meta.data)
+dim(seurat_phase@meta.data)  # [1] 11635    14
 
 # After scoring the cells for cell cycle, we would like to determine whether cell cycle is a major source of variation in our dataset using PCA. 
 # 1. choose the most variable features
@@ -740,3 +738,242 @@ seurat_phase <- FindVariableFeatures(seurat_phase,
                                        verbose = FALSE)
 
 
+# Scale the counts
+seurat_phase <- ScaleData(seurat_phase)
+
+# Perform PCA (by default, npcs = 50)
+seurat_phase <- RunPCA(seurat_phase)
+
+# Plot the PCA colored by cell cycle phase
+jpeg(filename = "figures/QC/cell_cycle_effect.jpeg",
+     quality = 100,
+     res = 150,
+     width = 1000, height = 1000)
+
+DimPlot(seurat_phase,
+        reduction = "pca",
+        group.by= "Phase",
+        split.by = "Phase")                         
+
+dev.off()
+
+
+table(seurat_phase$Phase)
+# G1  G2M    S 
+# 6220 2758 2657 
+
+
+# save and remove for memeory
+saveRDS(seurat_phase, file = "objects/seurat_phase.rds")
+rm(seurat_phase)
+
+
+# 4. Pre-process ----
+# Split seurat object by condition to perform iterative works
+split_seurat <- SplitObject(filtered_seurat, split.by = "sample")
+View(split_seurat)     # 12w_g10 already filtered out by the criteria of 200-4k genes and mito < 40%
+length(split_seurat)   # 16
+
+# Adjust the memory limit
+options(future.globals.maxSize = 4000 * 1024^2)
+
+# check the metadata to see if there's any variable to consider to regress out
+names(split_seurat[[1]]@meta.data)
+
+# Automated Normalize, CellCycleScoring, and SCTransfor (with regressing out mt content)
+for (i in 1:length(split_seurat)) {
+  split_seurat[[i]] <- NormalizeData(split_seurat[[i]], verbose = TRUE)
+  split_seurat[[i]] <- CellCycleScoring(split_seurat[[i]], g2m.features=g2m_genes, s.features=s_genes)
+  split_seurat[[i]] <- SCTransform(split_seurat[[i]], vars.to.regress = c("percent.mt"))
+}
+
+
+# Check which assays are stored in objects (All need to show both RNA and SCT)
+for(i in 1:length(split_seurat)){
+  print(names(split_seurat[[i]]@assays))
+}
+
+# save permanent (pre-processed seurat)
+saveRDS(split_seurat, file = "objects/split_seurat.rds")
+# split_seurat <- readRDS(file = "objects/split_seurat.rds")
+
+
+
+# 5. Integration ----
+# Using SCTransform object as input
+# # Select the most variable features to use for integration (default: nfeatures = 2000)
+# integ_features <- SelectIntegrationFeatures(object.list = split_seurat, nfeatures = 3000)
+# 
+# # Prepare the SCT list object for integration
+# split_seurat <- PrepSCTIntegration(object.list = split_seurat,
+#                                    anchor.features = integ_features)
+# 
+# # Find best buddies - can take a while to run
+# integ_anchors <- FindIntegrationAnchors(object.list = split_seurat,
+#                                         normalization.method = "SCT",
+#                                         anchor.features = integ_features)
+#                                         
+# 
+# # Error message due to low cell counts of 9w_47f. this will be excluded from integration.
+# # Find best buddies with adjusted dims and k.filter
+# integ_anchors <- FindIntegrationAnchors(object.list = split_seurat,
+#                                         normalization.method = "SCT",
+#                                         anchor.features = integ_features,
+#                                         dims = 1:13,
+#                                         k.filter = 14)
+
+
+# Still got an error message.
+# Remove 9w_47f from the list.
+split_seurat <- split_seurat[-13]
+
+# Select the most variable features to use for integration (default: nfeatures = 2000)
+integ_features <- SelectIntegrationFeatures(object.list = split_seurat, nfeatures = 3000)
+
+# Prepare the SCT list object for integration
+split_seurat <- PrepSCTIntegration(object.list = split_seurat,
+                                   anchor.features = integ_features)
+
+# Find best buddies - can take a while to run 
+integ_anchors <- FindIntegrationAnchors(object.list = split_seurat,
+                                        normalization.method = "SCT",
+                                        anchor.features = integ_features,
+                                        k.filter = 59)      # adjust the default value to avoid another error
+
+# Integrate across conditions
+seurat_integrated <- IntegrateData(anchorset = integ_anchors,
+                                   normalization.method = "SCT")
+# save
+saveRDS(seurat_integrated, file = "objects/seurat_integrated.rds")
+# seurat_integrated <- readRDS(file = "objects/seurat_integrated.rds")
+
+
+# 6. Reduction ----
+# Run PCA
+seurat_integrated <- RunPCA(object = seurat_integrated)
+
+
+# re-leveling of sample column
+sample.vector <-names(table(seurat_integrated$sample))
+View(sample.vector)
+sample.vector <- c("w3_wt",
+                   "w3_g10",
+                   "w3_47f",
+                   "w3_45f",
+                   "w3_47f_nuc",
+                   "w3_45f_nuc",
+                   "w6_wt",
+                   "w6_g10",
+                   "w6_47f.02",
+                   "w6_45f.02",
+                   "w9_wt",
+                   "w9_g10",
+                   "w12_wt",
+                   "w12_47f",
+                   "w12_45f")
+                  
+seurat_integrated$sample <- factor(seurat_integrated$sample, levels = sample.vector)
+table(seurat_integrated$sample)
+
+# Plot PCA
+library(ggplot2)
+
+jpeg(filename = "figures/reduction/pca.jpeg", 
+     width = 2500, height = 600,
+     quality = 100,
+     res = 100)
+
+PCAPlot(seurat_integrated, split.by = "sample")  + 
+  ggtitle("PCA Plot by Sample") + 
+  theme(axis.text.x = element_blank()) +
+  # theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5)) +
+  theme(plot.title = element_text(hjust=0.5, face="bold"))
+
+dev.off()
+
+# Run UMAP
+seurat_integrated <- RunUMAP(seurat_integrated, 
+                               dims = 1:40,
+                               reduction = "pca")
+
+# Plot UMAP                             
+DimPlot(seurat_integrated)        
+Idents(seurat_integrated) <- "sample"
+DimPlot(seurat_integrated, split.by = "sample")
+
+
+# 7. Clustering ----
+# Determine the K-nearest neighbor graph
+seurat_integrated <- FindNeighbors(object = seurat_integrated, dims = 1:40)
+
+
+# Determine the clusters for various resolutions                                
+seurat_integrated <- FindClusters(object = seurat_integrated, 
+                                    resolution = c(0.4, 0.6, 0.8, 1.0, 1.4))
+
+# save 
+saveRDS(seurat_integrated, file = "objects/seurat_integrated_clustered.rds")
+# seurat_integrated <- readRDS(file = "objects/seurat_integrated_clustered.rds")
+
+names(seurat_integrated@meta.data)
+
+# :: Clusters by resolution ----
+res.list <- list(names(seurat_integrated@meta.data[17]),
+                 names(seurat_integrated@meta.data[18]),
+                 names(seurat_integrated@meta.data[19]),
+                 names(seurat_integrated@meta.data[20]),
+                 names(seurat_integrated@meta.data[21]))
+res.list
+
+# check the default assay
+DefaultAssay(seurat_integrated) <- "integrated"
+
+view_clusters <- function(res){
+  Idents(seurat_integrated) <- res
+  DimPlot(seurat_integrated,
+          reduction = "umap",
+          label = TRUE,
+          label.size = 5,
+          pt.size = 0.8) +
+    ggtitle(paste0("Clustering at ", res)) + 
+    theme(plot.title = element_text(hjust=0.5, face="bold"))
+}
+
+
+# re-leveling clusters
+# check the number of clusters
+length(unique(seurat_integrated$integrated_snn_res.0.4))    # 16
+length(unique(seurat_integrated$integrated_snn_res.0.6))    # 17
+length(unique(seurat_integrated$integrated_snn_res.0.8))    # 19
+length(unique(seurat_integrated$integrated_snn_res.1))      # 23
+length(unique(seurat_integrated$integrated_snn_res.1.4))    # 23
+
+
+
+
+seurat_integrated$integrated_snn_res.0.4 <- factor(seurat_integrated$integrated_snn_res.0.4, levels = 0:15)
+seurat_integrated$integrated_snn_res.0.6 <- factor(seurat_integrated$integrated_snn_res.0.6, levels = 0:16)
+seurat_integrated$integrated_snn_res.0.8 <- factor(seurat_integrated$integrated_snn_res.0.8, levels = 0:18)
+seurat_integrated$integrated_snn_res.1 <- factor(seurat_integrated$integrated_snn_res.1, levels = 0:22)
+seurat_integrated$integrated_snn_res.1.4 <- factor(seurat_integrated$integrated_snn_res.1.4, levels = 0:22)
+
+
+umap.list <- list()
+for(i in 1:length(res.list)){
+  umap.list[[i]] <- view_clusters(res.list[[i]])
+}
+
+# export
+for(i in 1:length(umap.list)){
+  jpeg(filename = paste0("figures/Clustering/Clusters_umap_", res.list[[i]], ".jpeg"),
+       width = 1200, height = 1000,
+       quality = 100,
+       res = 100)
+  
+  print(umap.list[[i]])
+  
+  dev.off()
+}
+
+
+# comeback 3/17 ====
