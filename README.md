@@ -164,6 +164,14 @@
   <img src="figures/reduction/pca.jpeg">
 
 
+### Clustering results
+
+<img src="figures/Clustering/Clusters_umap_integrated_snn_res.0.4.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_integrated_snn_res.0.6.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_integrated_snn_res.0.8.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_integrated_snn_res.1.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_integrated_snn_res.1.4.jpeg" width = "800">
+
 
 
 
