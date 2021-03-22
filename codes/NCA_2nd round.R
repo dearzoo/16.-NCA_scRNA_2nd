@@ -780,7 +780,7 @@ options(future.globals.maxSize = 4000 * 1024^2)
 # check the metadata to see if there's any variable to consider to regress out
 names(split_seurat[[1]]@meta.data)
 
-# Automated Normalize, CellCycleScoring, and SCTransfor (with regressing out mt content)
+# Automated Normalize, CellCycleScoring, and SCTransform (with regressing out mt content)
 for (i in 1:length(split_seurat)) {
   split_seurat[[i]] <- NormalizeData(split_seurat[[i]], verbose = TRUE)
   split_seurat[[i]] <- CellCycleScoring(split_seurat[[i]], g2m.features=g2m_genes, s.features=s_genes)
@@ -975,5 +975,97 @@ for(i in 1:length(umap.list)){
   dev.off()
 }
 
+# :: Clustering QC ----
+Idents(seurat_integrated) <- "sample"
+table(Idents(seurat_integrated))
 
-# comeback 3/17 ====
+
+# comeback 3/18 ====
+
+# Check any segregation of clusters by sample: cell distribution per cluster in each sample
+# Extract identity and sample information from seurat object to determine the number of cells per cluster per sample
+library(dplyr)
+n_cells.list <- list()
+
+n_cells.list[[1]] <- FetchData(seurat_integrated, 
+                               vars = c("ident", "integrated_snn_res.0.4")) %>%
+  dplyr::count(ident, integrated_snn_res.0.4) %>%
+  tidyr::spread(ident, n)
+
+n_cells.list[[2]] <- FetchData(seurat_integrated, 
+                               vars = c("ident", "integrated_snn_res.0.6")) %>%
+  dplyr::count(ident, integrated_snn_res.0.6) %>%
+  tidyr::spread(ident, n)
+
+
+n_cells.list[[3]] <- FetchData(seurat_integrated, 
+                               vars = c("ident", "integrated_snn_res.0.8")) %>%
+  dplyr::count(ident, integrated_snn_res.0.8) %>%
+  tidyr::spread(ident, n)
+
+n_cells.list[[4]] <- FetchData(seurat_integrated, 
+                               vars = c("ident", "integrated_snn_res.1")) %>%
+  dplyr::count(ident, integrated_snn_res.1) %>%
+  tidyr::spread(ident, n)
+
+n_cells.list[[5]] <- FetchData(seurat_integrated, 
+                               vars = c("ident", "integrated_snn_res.1.4")) %>%
+  dplyr::count(ident, integrated_snn_res.1.4) %>%
+  tidyr::spread(ident, n)
+
+# View tables
+names(n_cells.list) <- res.list
+View(n_cells.list[[1]])
+
+
+View(table(seurat_integrated$sample))
+
+# export
+library(xlsx)
+for(i in 1:length(n_cells.list)){
+  write.xlsx(n_cells.list[[i]], 
+             file = "results/Clustering QC/clustering_QC_ncells_by_sample.xlsx", 
+             sheetName = names(n_cells.list[i]),
+             append = T,
+             row.names = F)
+}
+
+
+
+# Explore whether clusters segregate by cell cycle phase
+Idents(seurat_integrated) <- "orig.ident"
+DimPlot(seurat_integrated,
+        label = TRUE, 
+        split.by = "Phase",
+        pt.size = 0.3)  + NoLegend()
+
+
+# Segregation of clusters by various sources of uninteresting variation
+# Determine metrics to plot present in seurat_integrated@meta.data
+metrics <-  c("nCount_RNA", "nFeature_RNA", "S.Score", "G2M.Score", "percent.mt")
+DefaultAssay(seurat_integrated) <- "RNA"
+
+cluster.qc <- function(obj, resolution){
+  Idents(obj) <- resolution
+  FeaturePlot(obj, 
+              reduction = "umap", 
+              features = metrics,
+              pt.size = 0.4, 
+              order = TRUE,
+              min.cutoff = 'q10',             # play around with these number (min.cutoff, max.cutoff)
+              # max.cutoff = 'q99',
+              label = TRUE,
+              label.size = 5,
+              ncol = 3)
+}
+
+
+# export
+for(i in 1:length(res.list)){
+  jpeg(filename = paste0("figures/Clustering/Clustering QC metrics.", res.list[[i]], ".jpeg"),
+       width = 1500, height = 1000)
+  
+  print(cluster.qc(seurat_integrated, res.list[[i]]))
+  
+  dev.off()
+}
