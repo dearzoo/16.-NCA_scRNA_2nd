@@ -157,6 +157,26 @@
 
 
 
+### Cell counts by sample 
+|    |   sample   | cell counts |
+|:--:|:----------:|:-----------:|
+|  1 |    w3_wt   |     199     |
+|  2 |   w3_g10   |     402     |
+|  3 |   w3_47f   |     338     |
+|  4 |   w3_45f   |      59     |
+|  5 | w3_47f_nuc |     2867    |
+|  6 | w3_45f_nuc |     6707    |
+|  7 |    w6_wt   |     114     |
+|  8 |   w6_g10   |     116     |
+|  9 |  w6_47f.02 |     181     |
+| 10 |  w6_45f.02 |     158     |
+| 11 |    w9_wt   |     124     |
+| 12 |   w9_g10   |      69     |
+| 13 |   w12_wt   |     103     |
+| 14 |   w12_47f  |      89     |
+| 15 |   w12_45f  |      95     |
+
+
 
 ## Reduction
 ### PCA
@@ -172,6 +192,32 @@
 <img src="figures/Clustering/Clusters_umap_integrated_snn_res.1.jpeg" width = "800">
 <img src="figures/Clustering/Clusters_umap_integrated_snn_res.1.4.jpeg" width = "800">
 
+
+### Cell counts by sample (clusters at resolution 0.4)
+
+* The older the sample, the less clusters the cells are located. 
+   - W9 and W12 samples are only located in cluster 0~5(6)
+
+* Cluster 10~15 contain nuc-seq samples only
+
+| cluster (0.4) | w3_wt | w3_g10 | w3_47f | w3_45f | w3_47f_nuc | w3_45f_nuc | w6_wt | w6_g10 | w6_47f.02 | w6_45f.02 | w9_wt | w9_g10 | w12_wt | w12_47f | w12_45f |
+|:-------------:|:-----:|:------:|:------:|:------:|:----------:|:----------:|:-----:|:------:|:---------:|:---------:|:-----:|:------:|:------:|:-------:|:-------:|
+|       0       |  141  |   192  |   157  |   36   |    1115    |    2485    |   67  |   71   |    108    |     79    |   68  |   41   |   56   |    38   |    63   |
+|       1       |   10  |   70   |   49   |   10   |     415    |    1183    |   17  |   15   |     24    |     25    |   17  |   12   |   17   |    17   |    10   |
+|       2       |   4   |   62   |   65   |    8   |     208    |     435    |   16  |   15   |     21    |     17    |   23  |   11   |   20   |    18   |    10   |
+|       3       |   1   |   21   |   10   |   NA   |     150    |     550    |   3   |    6   |     8     |     13    |   5   |    3   |    3   |    4    |    1    |
+|       4       |   14  |   17   |   13   |    3   |     235    |     379    |   3   |    3   |     7     |     6     |   6   |    2   |    2   |    6    |    7    |
+|       5       |   10  |   26   |   14   |    2   |     121    |     424    |   4   |    3   |     11    |     12    |   4   |   NA   |    5   |    6    |    4    |
+|       6       |   NA  |    7   |    2   |   NA   |     64     |     280    |   1   |    1   |     1     |     2     |   1   |   NA   |   NA   |    NA   |    NA   |
+|       7       |   9   |    2   |   11   |   NA   |     119    |     160    |   2   |   NA   |     1     |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       8       |   6   |    2   |   16   |   NA   |     106    |     162    |   1   |    2   |     NA    |     1     |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       9       |   4   |    2   |    1   |   NA   |     89     |     104    |   NA  |   NA   |     NA    |     2     |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       10      |   NA  |    1   |   NA   |   NA   |     57     |     124    |   NA  |   NA   |     NA    |     1     |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       11      |   NA  |   NA   |   NA   |   NA   |     43     |     129    |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       12      |   NA  |   NA   |   NA   |   NA   |     50     |     90     |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       13      |   NA  |   NA   |   NA   |   NA   |     38     |     73     |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       14      |   NA  |   NA   |   NA   |   NA   |     34     |     72     |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
+|       15      |   NA  |   NA   |   NA   |   NA   |     23     |     57     |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
 
 
 
