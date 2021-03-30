@@ -33,7 +33,28 @@
 - PCA
 - UMAP
 - TSNE
-- Clustering (at resolution 0.5)
+- Clustering (at resolution 0.5 and 1.0)
+  - Not enough clusters were found
+  
+  * **resolution 0.5**
+  
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_200_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_250_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_300_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_200_50.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_250_50.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 0.5 of split_seurat_6w_300_50.jpeg" width="500">
+  
+  
+  * **resolution 1.0**
+  
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_200_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_250_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_300_40.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_200_50.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_250_50.jpeg" width="500">
+  <img src="../branch_6w/figures/UMAP at 1.0 of split_seurat_6w_300_50.jpeg" width="500">
+  
 
 
   
