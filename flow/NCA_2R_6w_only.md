@@ -8,25 +8,15 @@
 
 **Cell Counts by Sample**
       
-|                        | 6w_WT | 6w_G10 | 6w_I47F | 6w_SI |
-|:----------------------:|:-----:|:------:|:-------:|:-----:|
-| split_seurat_6w_200_40 |  114  |   116  |   181   |  175  |
-| split_seurat_6w_250_40 |   89  |   93   |   150   |  139  |
-| split_seurat_6w_300_40 |   71  |   81   |   126   |  120  |
-| split_seurat_6w_200_50 |  127  |   126  |   189   |  185  |
-| split_seurat_6w_250_50 |   94  |   98   |   155   |  147  |
-| split_seurat_6w_300_50 |   76  |   84   |   129   |  127  |
+|                        | 6w_WT | 6w_G10 | 6w_I47F | 6w_SI | Total cell counts |
+|:----------------------:|:-----:|:------:|:-------:|:-----:|:-----------------:|
+| split_seurat_6w_200_40 |  114  |   116  |   181   |  175  |        586        |
+| split_seurat_6w_250_40 |   89  |   93   |   150   |  139  |        471        |
+| split_seurat_6w_300_40 |   71  |   81   |   126   |  120  |        398        |
+| split_seurat_6w_200_50 |  127  |   126  |   189   |  185  |        627        |
+| split_seurat_6w_250_50 |   94  |   98   |   155   |  147  |        494        |
+| split_seurat_6w_300_50 |   76  |   84   |   129   |  127  |        416        |
 
-**Total Cell Counts by Filtration**  
-
-|       filtration       | total cell counts |
-|:----------------------:|:-----------------:|
-| split_seurat_6w_200_40 |        586        |
-| split_seurat_6w_250_40 |        471        |
-| split_seurat_6w_300_40 |        398        |
-| split_seurat_6w_200_50 |        627        |
-| split_seurat_6w_250_50 |        494        |
-| split_seurat_6w_300_50 |        416        |
 
 
 ## Pre-process and integration
