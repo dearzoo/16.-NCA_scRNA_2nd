@@ -30,7 +30,7 @@
   - k value parameters were modified
 - Integration across conditions (samples)
 
-## Integrated analysis
+## Integrated analysis & Clustering
 - PCA
 - UMAP
 - TSNE
@@ -58,8 +58,37 @@
   
 
 
+## Cell Type Identification
+- FeaturePlot (min genes 300, mito content 40)
+  
+  - **Mature Astrocytes**
+
+  <img src="../branch_6w/figures/cell type/seurat_300_40/FP_umap_300_40_m.mature.astro.jpeg" width="600">
+  
+  - **Fetal Astrocytes**
+  
+  <img src="../branch_6w/figures/cell type/seurat_300_40/FP_umap_300_40_m.fetal.astro.jpeg" width="500">
+  
+  - **Neurons**
+  
+  <img src="../branch_6w/figures/cell type/seurat_300_40/FP_umap_300_40_m.neurons.jpeg" width="600">
+  
+  - **Oligodendrocytes**
+  
+  <img src="../branch_6w/figures/cell type/seurat_300_40/FP_umap_300_40_m.oligo.jpeg" width="600">
+
+
+
+
+
+
+
+
 ## Try Monocle3
-- Too few clusters to see cell type
+- Too few clusters to see cell types
+  - try monocle3 (still doubtful if it'll work because all these resulted from such low numbers of total cells and the change in tool wouldn't make a big difference...)
+  
+
   
 
 
