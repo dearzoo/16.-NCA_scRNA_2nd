@@ -222,6 +222,27 @@
 - [Complete results](https://github.com/dearzoo/16.-NCA_scRNA_2nd/blob/main/results/Clustering%20QC/clustering_QC_ncells_by_sample.xlsx) by resolution of clutering
 
 
+
+## Cell Type Identification
+
+
+### Co-expression of Astrocyte genes and Neurons genes
+
+<img src="figures/Cell type/featureplot/co_expression_AQP4_ABAT.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_GAD1.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_KCNJ6.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_TPH1.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_DCX.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_GABBR2.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_FOXP2.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/co_expression_AQP4_SATB2.jpeg" width = "1000">
+
+
+
+
+
+
+
 ### nuc seq samples look very different from other samples. So, integration of only nuc seq samples
 1. integrated two samples
 
@@ -279,23 +300,23 @@
 ##### FeaturePlot
 
 * **Astrocytes**
-<img src="figures/Cell type/featureplot/feature_plots_m.astro.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/nuc_seq_only/feature_plots_m.astro.jpeg" width = "1000">
 
 
 * **Neurons**
-<img src="figures/Cell type/featureplot/feature_plots_m.neurons.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/nuc_seq_only/feature_plots_m.neurons.jpeg" width = "1000">
 
 
 * **Microglia**
-<img src="figures/Cell type/featureplot/feature_plots_m.microglia.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/nuc_seq_only/feature_plots_m.microglia.jpeg" width = "1000">
 
 
 * **Oligodendrocytes**
-<img src="figures/Cell type/featureplot/feature_plots_m.oligo.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/nuc_seq_only/feature_plots_m.oligo.jpeg" width = "1000">
 
 
 * **OPCs**
-<img src="figures/Cell type/featureplot/feature_plots_m.opcs.jpeg" width = "1000">
+<img src="figures/Cell type/featureplot/nuc_seq_only/feature_plots_m.opcs.jpeg" width = "1000">
 
 
 
