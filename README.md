@@ -226,7 +226,7 @@
 ## Cell Type Identification
 
 
-### Co-expression of Astrocyte genes and Neurons genes
+### Co-expression of Astrocyte genes and Neurons genes at resolution 0.4
 
 <img src="figures/Cell type/featureplot/co_expression_AQP4_ABAT.jpeg" width = "1000">
 <img src="figures/Cell type/featureplot/co_expression_AQP4_GAD1.jpeg" width = "1000">
