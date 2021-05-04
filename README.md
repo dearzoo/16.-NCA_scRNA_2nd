@@ -95,7 +95,6 @@
 - The 3rd columns are mitrochondrial content %. (sample names were added only for the convenience purpose)
 - [Violin Plots](https://github.com/dearzoo/16.-NCA_scRNA_2nd/blob/main/figures/violin/qc_violin_with_names.pdf) for the violin plots
 
-
 ### Filtration (What will be included in downstream analysis?)
 
 #### 1. Sample-level
@@ -200,7 +199,7 @@
 
 * Cluster 10~15 contain nuc-seq samples only
 
-| cluster (0.4) | w3_wt | w3_g10 | w3_47f | w3_45f | w3_47f_nuc | w3_45f_nuc | w6_wt | w6_g10 | w6_47f.02 | w6_45f.02 | w9_wt | w9_g10 | w12_wt | w12_47f | w12_45f |
+| Cluster (0.4) | w3_wt | w3_g10 | w3_47f | w3_45f | w3_47f_nuc | w3_45f_nuc | w6_wt | w6_g10 | w6_47f.02 | w6_45f.02 | w9_wt | w9_g10 | w12_wt | w12_47f | w12_45f |
 |:-------------:|:-----:|:------:|:------:|:------:|:----------:|:----------:|:-----:|:------:|:---------:|:---------:|:-----:|:------:|:------:|:-------:|:-------:|
 |       0       |  141  |   192  |   157  |   36   |    1115    |    2485    |   67  |   71   |    108    |     79    |   68  |   41   |   56   |    38   |    63   |
 |       1       |   10  |   70   |   49   |   10   |     415    |    1183    |   17  |   15   |     24    |     25    |   17  |   12   |   17   |    17   |    10   |
@@ -220,5 +219,88 @@
 |       15      |   NA  |   NA   |   NA   |   NA   |     23     |     57     |   NA  |   NA   |     NA    |     NA    |   NA  |   NA   |   NA   |    NA   |    NA   |
 
 
+- [Complete results](https://github.com/dearzoo/16.-NCA_scRNA_2nd/blob/main/results/Clustering%20QC/clustering_QC_ncells_by_sample.xlsx) by resolution of clutering
 
+
+### nuc seq samples look very different from other samples. So, integration of only nuc seq samples
+1. integrated two samples
+
+  - cell counts by sample
+
+| w3_47f_nuc | w3_45f_nuc |
+|:----------:|:----------:|
+|    2867    |    6707    |
+
+2. Run PCA: difference between samples
+
+  <img src="figures/reduction/pca_nuc.jpeg" width = "450">
+
+3. UMAP: difference between samples
+
+  <img src="figures/reduction/umap_nuc.jpeg">
+
+**4. Clustering results by resolution**
+
+<img src="figures/Clustering/Clusters_umap_nuc_seq_integrated_snn_res.0.4.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_nuc_seq_integrated_snn_res.0.6.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_nuc_seq_integrated_snn_res.0.8.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_nuc_seq_integrated_snn_res.1.jpeg" width = "800">
+<img src="figures/Clustering/Clusters_umap_nuc_seq_integrated_snn_res.1.4.jpeg" width = "800">
+
+
+
+### Cell type idenetification
+
+**1. Marker Genes**
+
+ * m.astro <- c("AQP4", "UBE2C", "NUSAP1", "TOP2A", "PTPRZ1", "HOPX", "FAM107A")
+ * m.neurons <- c("ABAT", "GAD1", "KCNJ6", "TPH1", "DCX", "GABBR2", "SATB2", "FOXP2")
+ * m.mic <- c("HLA-DRB1", "CSF1R", "CX3CR1", "HLA-DQA1")
+ * m.oligo <- c("FTH1", "PLP1", "FGF1", "MBP", "MOBP")
+ * m.opcs <- c("PDGFRA", "VCAN", "CSPG4")
+
+
+| Astrocyte | Neurons | Microglia | Oligo |  OPCs  |
+|:---------:|:-------:|:---------:|:-----:|:------:|
+|    AQP4   |   ABAT  |  HLA-DRB1 |  FTH1 | PDGFRA |
+|   UBE2C   |   GAD1  |   CSF1R   |  PLP1 |  VCAN  |
+|   NUSAP1  |  KCNJ6  |   CX3CR1  |  FGF1 |  CSPG4 |
+|   TOP2A   |   TPH1  |  HLA-DQA1 |  MBP  |        |
+|   PTPRZ1  |   DCX   |           |  MOBP |        |
+|    HOPX   |  GABBR2 |           |       |        |
+|  FAM107A  |  SATB2  |           |       |        |
+|           |  FOXP2  |           |       |        |
+
+
+
+
+
+
+##### FeaturePlot
+
+* **Astrocytes**
+<img src="figures/Cell type/featureplot/feature_plots_m.astro.jpeg" width = "1000">
+
+
+* **Neurons**
+<img src="figures/Cell type/featureplot/feature_plots_m.neurons.jpeg" width = "1000">
+
+
+* **Microglia**
+<img src="figures/Cell type/featureplot/feature_plots_m.microglia.jpeg" width = "1000">
+
+
+* **Oligodendrocytes**
+<img src="figures/Cell type/featureplot/feature_plots_m.oligo.jpeg" width = "1000">
+
+
+* **OPCs**
+<img src="figures/Cell type/featureplot/feature_plots_m.opcs.jpeg" width = "1000">
+
+
+
+
+##### DotPlot
+
+<img src="figures/Cell type/dotplot/DotPlot_all_markers.jpeg" width = "1000">
 
