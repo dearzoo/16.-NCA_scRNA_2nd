@@ -283,3 +283,110 @@ for(i in 1:length(res.list_nuc)){
   dev.off()
 }
 
+
+
+# 4. Cell Type Identification ----
+# :: marker genes ----
+m.astro <- c("AQP4", "UBE2C", "NUSAP1", "TOP2A", "PTPRZ1", "HOPX", "FAM107A")
+# general astro: "AQP4"
+# fetal astro: "UBE2C", "NUSAP1", "TOP2A"
+# intermediate astro: "PTPRZ1", "HOPX", "FAM107A"
+m.neurons <- c("ABAT", "GAD1", "KCNJ6", "TPH1", "DCX", "GABBR2", "SATB2", "FOXP2")
+m.oligo <- c("FTH1", "PLP1", "FGF1", "MBP", "MOBP")
+m.opcs <- c("PDGFRA", "VCAN", "CSPG4")
+m.mic <- c("HLA-DRB1", "CSF1R", "CX3CR1", "HLA-DQA1")
+markers.all <- c(m.mic, m.astro, m.neurons, m.oligo, m.opcs)
+select.markers <- c("AQP4", "AGT", "GABBR2", "KCNJ6", "MAP2", "FTH1", "FGF1")
+
+# :: FeaturePlot----
+DefaultAssay(seurat_integrated_nuc) <- "RNA"
+Idents(seurat_integrated_nuc) <- "integrated_snn_res.0.4"
+
+fplot <- function(obj, markers, ncol, min = NA, max = NA){FeaturePlot(obj,
+                                                                      reduction = "umap",
+                                                                      features = markers,
+                                                                      label = TRUE,
+                                                                      col = c("grey", "blue"),
+                                                                      ncol = ncol,
+                                                                      min.cutoff = min,
+                                                                      max.cutoff = max,
+                                                                      pt.size = 0.3)
+}
+
+fplot.list_nuc <- list(fplot(seurat_integrated_nuc, m.mic, 1),
+                       fplot(seurat_integrated_nuc, m.mic, 1, "q20", "q90"),
+                       fplot(seurat_integrated_nuc, m.astro, 3),
+                       fplot(seurat_integrated_nuc, m.astro, 3, "q20", "q90"),
+                       fplot(seurat_integrated_nuc, m.neurons, 3),
+                       fplot(seurat_integrated_nuc, m.neurons, 3, min = "q25"),
+                       fplot(seurat_integrated_nuc, m.oligo, 3),
+                       fplot(seurat_integrated_nuc, m.oligo, 3, min = "q25", "q90"),
+                       fplot(seurat_integrated_nuc, m.opcs, 2),
+                       fplot(seurat_integrated_nuc, select.markers, 3))
+
+names(fplot.list_nuc) <- c("m.microglia",
+                           paste0("m.microglia_", "q20_", "q90"),
+                           "m.astro",
+                           paste0("m.astro_", "q20_", "q90"),
+                           "m.neurons",
+                           paste0("m.neurons_", "q25_"),
+                           "m.oligo",
+                           paste0("m.oligo_", "q25_", "q90"),
+                           "m.opcs",
+                           "select.markers")
+
+
+
+
+# export
+for(i in 1:length(fplot.list_nuc)){
+  jpeg(filename = paste0("figures/Cell type/featureplot/nuc_seq_only/feature_plots_", names(fplot.list_nuc[i]), ".jpeg"), 
+       width = 1500, height = 1500)
+  print(fplot.list_nuc[[i]])
+  dev.off()
+}
+
+
+# :: DotPlot ----
+# color setting. 
+library(RColorBrewer)
+display.brewer.all()
+display.brewer.pal(3,"RdYlGn")
+# my_color <- brewer.pal(3,"RdYlGn")
+my_color <- c('yellow', 'red')
+# my_color
+
+
+View(seurat_integrated_nuc)
+# dotplot scale by size
+dot <- function(obj, gene, title){
+  DotPlot(obj, features = gene, dot.scale = 6, cols = my_color, scale.by = "size") +
+    RotatedAxis() +
+    labs(title = title) +
+    theme(plot.title = element_text(hjust = 0.5))  +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5))
+}
+
+# dotplot scale by radius
+dot01 <- function(obj, gene, title){
+  DotPlot(obj, features = gene, dot.scale = 6, cols = my_color, scale.by = "radius") +
+    RotatedAxis() +
+    labs(title = title) +
+    theme(plot.title = element_text(hjust = 0.5))  +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5))
+}
+
+
+jpeg(filename = "figures/Cell type/dotplot/DotPlot_all_markers.jpeg",
+     width = 1200, height = 1200)
+dot(seurat_integrated_nuc, markers.all, "DotPlot_ALL_resolution 0.4")
+dot01(seurat_integrated_nuc, markers.all, "DotPlot_ALL_resolution 0.4")
+dev.off()
+
+jpeg(filename = "figures/Cell type/dotplot/DotPlot_all_markers_FTH1_excluded.jpeg",
+     width = 1200, height = 1200)
+dot(seurat_integrated_nuc, markers.all[markers.all != "FTH1"], "DotPlot_ALL_resolution 0.4")
+dev.off()
+
+
+

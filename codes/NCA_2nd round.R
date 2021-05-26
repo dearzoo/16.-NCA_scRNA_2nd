@@ -851,7 +851,7 @@ saveRDS(seurat_integrated, file = "objects/seurat_integrated.rds")
 # 6. Reduction ----
 # Run PCA
 seurat_integrated <- RunPCA(object = seurat_integrated)
-
+View(table(seurat_integrated$sample))
 
 # re-leveling of sample column
 sample.vector <-names(table(seurat_integrated$sample))
@@ -957,7 +957,7 @@ seurat_integrated$integrated_snn_res.0.8 <- factor(seurat_integrated$integrated_
 seurat_integrated$integrated_snn_res.1 <- factor(seurat_integrated$integrated_snn_res.1, levels = 0:22)
 seurat_integrated$integrated_snn_res.1.4 <- factor(seurat_integrated$integrated_snn_res.1.4, levels = 0:22)
 
-
+umap.list[[2]]
 umap.list <- list()
 for(i in 1:length(res.list)){
   umap.list[[i]] <- view_clusters(res.list[[i]])
@@ -978,6 +978,68 @@ for(i in 1:length(umap.list)){
 # :: Clustering QC ----
 Idents(seurat_integrated) <- "sample"
 table(Idents(seurat_integrated))
+View(table(Idents(seurat_integrated)))
+
+
+
+
+# 8. Cell type identification ----
+markers.astro <- c("AQP4")
+markers.neurons <- c("ABAT", "GAD1", "KCNJ6", "TPH1", "DCX", "GABBR2", "SATB2", "FOXP2")
+
+
+
+# Set ident as resolution 0.4
+names((seurat_integrated@meta.data))
+Idents(seurat_integrated) <- "integrated_snn_res.0.4"
+
+fp <- function(x, redu, markers){FeaturePlot(x,
+                                             reduction = redu,
+                                             features = markers, cols = c("grey", "red"),
+                                             label = TRUE)
+}
+
+
+co.fp <- function(x, redu, markers){FeaturePlot(x,
+                                                reduction = redu,
+                                                features = markers, 
+                                                cols =c("#ebe8e8", "red", "blue"),
+                                                label = TRUE,
+                                                pt.size = 0.2,
+                                                blend = TRUE)
+}
+
+
+# Co-expression of Astrocyte and Neurons
+co_expression.list <- list()
+for(i in 1:length(markers.neurons)){
+  co_expression.list[[i]] <- co.fp(seurat_integrated, "umap", c(markers.astro, markers.neurons[[i]]))
+}
+
+
+
+names(co_expression.list) <- paste0("co_expression_", "AQP4_", markers.neurons[1:8])
+
+# export
+for(i in 1:length(co_expression.list)){
+  jpeg(filename = paste0("figures/Cell type/featureplot/", names(co_expression.list[i]), ".jpeg"),
+       quality = 100,
+       res = 100,
+       width = 2000, height = 700)
+  
+  print(co_expression.list[[i]])
+  
+  dev.off()
+}
+
+
+
+
+
+
+
+
+
 
 
 # comeback 3/18 ====
